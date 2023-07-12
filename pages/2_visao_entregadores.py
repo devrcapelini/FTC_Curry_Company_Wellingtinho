@@ -58,7 +58,7 @@ def clean_code(df1):
     df1['Delivery_person_Ratings'] = df1['Delivery_person_Ratings'].astype(float)
 
     ## 3. convertendo a coluna  order_date de texto para data
-    df1['Order_Date'] = datetime(df1['Order_Date'], format= '%d-%m-%Y')
+    df1['Order_Date'] = pd.to_datetime(df1['Order_Date'], format= '%d-%m-%Y')
 
     ## 4. convertendo multiple_deliverie de texto para numero inteiro(int)
     linhas_selecionadas = (df1['multiple_deliveries'] != 'NaN ')
