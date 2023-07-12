@@ -1,6 +1,7 @@
 # Libraries
 import pandas as pd
 import plotly.express as px
+from datetime import datetime
 import re
 from haversine import haversine
 import streamlit as st
@@ -106,7 +107,7 @@ def clean_code(df1):
     df1['Delivery_person_Ratings'] = df1['Delivery_person_Ratings'].astype(float)
 
     ## 3. convertendo a coluna  order_date de texto para data
-    df1['Order_Date'] = pd.to_datetime(df1['Order_Date'], format= '%d-%m-%Y')
+    df1['Order_Date'] = datetime(df1['Order_Date'], format= '%d-%m-%Y')
 
     ## 4. convertendo multiple_deliverie de texto para numero inteiro(int)
     linhas_selecionadas = (df1['multiple_deliveries'] != 'NaN ')
@@ -157,9 +158,9 @@ st.sidebar.markdown("""___""")
 st.sidebar.markdown('## Selecione uma data limite')
 
 date_slider = st.sidebar.slider('Até qual valor?',
-                  value=pd.to_datetime(2022,4,13),
-                  min_value=pd.to_datetime(2022,2,11),
-                  max_value=pd.to_datetime(2022,4,6),
+                  value= datetime(2022,4,13),
+                  min_value= datetime(2022,2,11),
+                  max_value= datetime(2022,4,6),
                   format='DD-MM-YYYY')
 
 st.sidebar.markdown("""___""")
