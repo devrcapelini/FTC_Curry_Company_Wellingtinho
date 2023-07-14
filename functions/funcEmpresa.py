@@ -1,4 +1,5 @@
 import folium
+import pandas as pd
 import plotly.express as px
 from streamlit_folium import folium_static
 #Este import está aqui e está no código de regras de negócio (1_visao_empresa.py), seria mais limpo usar somente aqui.

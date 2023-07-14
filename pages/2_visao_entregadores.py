@@ -1,82 +1,12 @@
 # Libraries
-import pandas as pd
-import plotly.express as px
-import re
-from haversine import haversine
-import streamlit as st
 from PIL import Image
-import folium
 from datetime import datetime
-from streamlit_folium import folium_static
+
+from functions.funcEmpresa import *
+from functions.funcEntregadores import *
 
 st.set_page_config(page_title='Visão Entregadores',layout='wide')
 
-#-----------------------------
-# Funções
-#-----------------------------
-#função top_delivers
-def top_delivers(df1,top_asc):
-    df2 = df1.loc[:,['Delivery_person_ID','City','Time_taken(min)']].groupby(['City','Delivery_person_ID']).max().sort_values(['City','Time_taken(min)'],ascending = top_asc).reset_index()
-    df_aux01 = df2.loc[df2['City'] == 'Metropolitian', :].head(10)
-    df_aux02 = df2.loc[df2['City'] == 'Urban', :].head(10)
-    df_aux03 = df2.loc[df2['City'] == 'Semi-Urban', :].head(10)
-    df3 = pd.concat([df_aux01, df_aux02, df_aux03]).reset_index(drop=True)
-    return df3
-
-
-# Limpeza dos dados
-def clean_code(df1):
-    """Esta função tem a responsabilidade de limpar o dataframe
-        Tipos de limpeza:
-        1 . Remoção dos dados NaN
-        2. Mudança do tipo da coluna de dados
-        3. Remoção dos espaços das variaveis de texto
-        4. formatação da coluna de datas
-        5. Limpeza da coluna de tempo (remoção do texto da variável numérica)
-        Input: Dataframe
-        Output: Dataframe
-    """
-    
-    ## 1. convertendo a coluna Age de texto para número
-    linhas_selecionadas = (df1['Delivery_person_Age'] != 'NaN ')
-    df1 = df1.loc[linhas_selecionadas, :].copy()
-
-    linhas_selecionadas = (df1['Road_traffic_density'] != 'NaN ')
-    df1 = df1.loc[linhas_selecionadas, :].copy()
-
-    linhas_selecionadas = (df1['City'] != 'NaN ')
-    df1 = df1.loc[linhas_selecionadas, :].copy()
-
-    linhas_selecionadas = (df1['Festival'] != 'NaN ')
-    df1 = df1.loc[linhas_selecionadas, :].copy()
-
-
-    df1['Delivery_person_Age'] = df1['Delivery_person_Age'].astype(int)
-
-
-    ##  2. convertendo a coluna Ratings de texto para numero Decimal (Float)
-    df1['Delivery_person_Ratings'] = df1['Delivery_person_Ratings'].astype(float)
-
-    ## 3. convertendo a coluna  order_date de texto para data
-    df1['Order_Date'] = pd.to_datetime(df1['Order_Date'], format= '%d-%m-%Y')
-
-    ## 4. convertendo multiple_deliverie de texto para numero inteiro(int)
-    linhas_selecionadas = (df1['multiple_deliveries'] != 'NaN ')
-    df1 = df1.loc[linhas_selecionadas, :].copy()
-    df1['multiple_deiveries'] = df1 ['multiple_deliveries'].astype(int)
-
-    ## 5. Removendo os espacos dentro de strings/texto/object
-    df1.loc[:, 'ID'] = df1.loc[:, 'ID'].str.strip()
-    df1.loc[:, 'Road_traffic_density'] = df1.loc[:, 'Road_traffic_density'].str.strip()
-    df1.loc[:, 'Type_of_order'] = df1.loc[:, 'Type_of_order'].str.strip()
-    df1.loc[:, 'Type_of_vehicle'] = df1.loc[:, 'Type_of_vehicle'].str.strip()
-    df1.loc[:, 'City'] = df1.loc[:, 'City'].str.strip()
-    df1.loc[:, 'Festival'] = df1.loc[:, 'Festival'].str.strip()
-    ##  7. Limpando a coluna de time taken
-    df1['Time_taken(min)'] = df1['Time_taken(min)'].apply(lambda x: x.split('(min) ')[1])
-    df1['Time_taken(min)'] = df1['Time_taken(min)'].astype(int)
-    
-    return df1
 
 #-----------------------------
 # Inicio da estrutura lógica do código
